@@ -3,7 +3,8 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import jobRoutes from "./routes/routes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
-import logger from "./middleware/loggerMiddleware.js";
+import { logger } from "./middleware/loggerMiddleware.js";
+import { processQueue } from "./utils/queue.js";
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use(logger);
 
 connectDB();
+processQueue();
 
 app.get("/", (req, res) => {
   res.send("Server is running");

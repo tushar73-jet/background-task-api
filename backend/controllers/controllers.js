@@ -8,13 +8,7 @@ export const createJob = async (req, res) => {
       return res.status(400).json({ message: "Job name is required" });
     }
 
-    const job = await Job.create({ name });
-
-    // simulate background task
-    setTimeout(async () => {
-      job.status = "completed";
-      await job.save()
-    }, 3000)
+    const job = await Job.create({ name })
 
     res.status(201).json(job);
   } catch (error) {
