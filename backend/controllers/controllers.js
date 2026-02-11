@@ -44,3 +44,30 @@ export const deleteJob = async (req, res) => {
     res.status(500).json({ message: "Server error" })
   }
 }
+
+export const retryJob = async (req, res) => {
+  try {
+    const job = await Job.findById(req.params.id)
+    if (!job) {
+      return res.status(404).json({ message: "Job not found" })
+    }
+
+    job.status = "pending"
+    job.result = undefined
+    job.errorDetails = undefined
+    await job.save()
+
+    res.json({ message: "Job scheduled for retry", job })
+  } catch (error) {
+    res.status(500).json({ message: "Server error" })
+  }
+}
+
+export const deleteAllJobs = async (req, res) => {
+  try {
+    await Job.deleteMany({})
+    res.json({ message: "All jobs deleted successfully" })
+  } catch (error) {
+    res.status(500).json({ message: "Server error" })
+  }
+}
