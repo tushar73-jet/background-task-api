@@ -13,10 +13,23 @@ export const processQueue = async () => {
                 // simulate work
                 await new Promise(resolve => setTimeout(resolve, 5000))
 
-                job.status = "completed"
-                await job.save()
+                // randomly fail 20% of the time for demonstration
+                const shouldFail = Math.random() < 0.2
 
-                console.log(`Job completed: ${job.name}`)
+                if (shouldFail) {
+                    job.status = "failed"
+                    job.errorDetails = "Random processing error occurred"
+                    console.log(`Job failed: ${job.name}`)
+                } else {
+                    job.status = "completed"
+                    job.result = {
+                        output: `Processed ${job.name} successfully`,
+                        processedAt: new Date().toISOString()
+                    }
+                    console.log(`Job completed: ${job.name}`)
+                }
+
+                await job.save()
             }
         } catch (error) {
             console.error("Worker error:", error.message)

@@ -2,13 +2,13 @@ import Job from "../models/Job.js";
 
 export const createJob = async (req, res) => {
   try {
-    const { name } = req.body
+    const { name, description } = req.body;
 
     if (!name) {
       return res.status(400).json({ message: "Job name is required" });
     }
 
-    const job = await Job.create({ name })
+    const job = await Job.create({ name, description });
 
     res.status(201).json(job);
   } catch (error) {
