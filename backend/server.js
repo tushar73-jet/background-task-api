@@ -5,6 +5,7 @@ import jobRoutes from "./routes/routes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import { logger } from "./middleware/loggerMiddleware.js";
 import { processQueue } from "./utils/queue.js";
+import { initCronJobs } from "./utils/cronJobs.js";
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ app.use(logger);
 
 connectDB();
 processQueue();
+initCronJobs();
 
 app.get("/", (req, res) => {
   res.send("Server is running");
