@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import rateLimit from "express-rate-limit";
 import connectDB from "./config/db.js";
 import jobRoutes from "./routes/routes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
@@ -12,9 +13,20 @@ dotenv.config();
 
 const app = express();
 
+// Rate Limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, 
+  max: 100, 
+  message: {
+    success: false,
+    message: 'Too many requests. Please try again after 15 minutes.'
+  }
+});
+
 app.use(cors());
 app.use(express.json());
 app.use(logger);
+app.use("/api", limiter); 
 
 connectDB();
 processQueue();
